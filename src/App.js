@@ -107,11 +107,6 @@ export const App = () => {
     calcularPrecio(actividadList.length, quantity);
   }, [actividadList, quantity]);
 
-  // useEffect debugger
-  useEffect(() => {
-    console.log(companions);
-  }, [companions]);
-
   const onChangeRegion = ({ target }) => {
     setRegionId(target.value);
     getComunas(target.value);
@@ -156,17 +151,11 @@ export const App = () => {
     var birthDate = new Date(target.value);
     var age = today.getFullYear() - birthDate.getFullYear();
     var m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) 
-    {
-        age--;
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
     }
     setAgeClient(age);
   };
-
-  // useEffect(() => {
-  //   console.log(nameClient, fatherLastName, motherLastName, rutClient, passwordClient, ageClient);
-  // }, [nameClient, fatherLastName, motherLastName, rutClient, passwordClient, ageClient]);
-
 
   const onChangeRutLogin = ({ target }) => {
     setRutLogin(target.value);
@@ -193,13 +182,13 @@ export const App = () => {
   const handleLogin = () => {
     login()
       .then((response) => {
-        console.log('handleLogin',response);
+        console.log('handleLogin', response);
         if (response.data.message) {
           setLoginStatus(response.data.message);
         } else {
           setLoginStatus(response.data.RUT);
         }
-        return response
+        return response;
       })
       .then((response) => {
         response.data.isAdmin ? setCurrentPage('registerActivitie') : setCurrentPage('packageForm');
@@ -502,14 +491,11 @@ export const App = () => {
             onChange={onChangePasswordLogin}
           ></input>
         </div>
-        { loginError ? (
+        {loginError ? (
           <div className="alert alert-danger" role="alert">
             Error al ingresar usuario y/o contraseña
           </div>
-          ) : (
-          null
-        )  
-      }
+        ) : null}
         <div className="text-center mt-3">
           <button className="btn btn-light  my-1 py-3 w-75" onClick={handleLogin}>
             Ingresar
@@ -582,7 +568,7 @@ export const App = () => {
           ></input>
         </div>
         <div className="form-group mt-3">
-          <label htmlFor="edad">Ingrese su edad:</label>
+          <label htmlFor="edad">Ingrese su fecha de nacimiento:</label>
           <input
             type="date"
             className="form-control"
@@ -591,14 +577,11 @@ export const App = () => {
             onChange={onChangeAge}
           ></input>
         </div>
-        { isRegister ? (
+        {isRegister ? (
           <div className="alert alert-danger" role="alert">
             El usuario tiene que ser mayor de edad
           </div>
-          ) : (
-          null
-        )  
-      }
+        ) : null}
         <div className="text-center mt-3">
           <button
             className="btn btn-light  my-1 py-3 w-75"
