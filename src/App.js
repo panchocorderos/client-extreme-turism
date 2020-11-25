@@ -104,8 +104,11 @@ export const App = () => {
   }, []);
 
   useEffect(() => {
-    calcularPrecio(actividadList.length, quantity);
-  }, [actividadList, quantity]);
+    if (cardActivities !== undefined){
+      // console.log(cardActivities, quantity);
+      calcularPrecio(cardActivities, quantity);
+    }
+  }, [cardActivities, quantity]);
 
   const onChangeRegion = ({ target }) => {
     setRegionId(target.value);
@@ -221,6 +224,7 @@ export const App = () => {
       address: lugar.direccion,
       city: comuna.nombre,
       region: region.nombre,
+      precio: actividad.precio,
     };
     setCardActivities([...cardActivities, singleActivitie]);
   };
@@ -229,8 +233,13 @@ export const App = () => {
     setCurrentPage('bookingDetails');
   };
 
-  const calcularPrecio = (cantidadActividades, cantidadPersonas) =>
-    setPackagePrice(cantidadActividades * cantidadPersonas * 100000);
+  const calcularPrecio = (cardActivities, cantidadDias) => {
+    let precios = 0;
+    precios = cardActivities.map((act) => act.precio);
+    let total = precios.reduce((a, b) => a + b, 0);
+    
+    setPackagePrice(total * Number(cantidadDias));
+  }
 
   const isAddDisabled = !(regionId && comunaId && idLugar && idActividad);
   const isCreateDisabled = !isComplete;
@@ -324,6 +333,12 @@ export const App = () => {
                       <Icon.GeoAltFill size={30} />
                       <h5 className="ml-4 mt-2">
                         {activitie.address}, {activitie.city}. {activitie.region}, Chile
+                      </h5>
+                    </div>
+                    <div className="d-flex ml-5 mt-3">
+                      <Icon.Cash size={30} />
+                      <h5 className="ml-4 mt-2">
+                        ${activitie.precio}
                       </h5>
                     </div>
                   </div>
@@ -438,7 +453,7 @@ export const App = () => {
   else if (currentPage === 'paymentDetails')
     return (
       <div className="container bg-dark mt-4 text-white py-4 font-weight-bold">
-        <h5 className="text-center border-bottom border-white mt-2">Detalle de Reserva</h5>
+        <h5 className="text-center border-bottom border-white mt-2">Detalle de Pago</h5>
         <ul className="list-group list-group-flush">
           <div className="card text-left bg-white border border-dark text-dark my-2">
             <div className="ml-5 py-4">
@@ -660,6 +675,16 @@ export const App = () => {
             className="form-control"
             id="type"
             placeholder="Ingrese el tipo de actividad"
+            // onChange={onChangeName}
+          ></input>
+        </div>
+        <div className="form-group mt-3">
+          <label htmlFor="type">Precio:</label>
+          <input
+            type="text"
+            className="form-control"
+            id="type"
+            placeholder="Ingrese el precio de la actividad"
             // onChange={onChangeName}
           ></input>
         </div>
