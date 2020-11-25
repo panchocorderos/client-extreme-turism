@@ -73,8 +73,8 @@ export const App = () => {
     });
   };
 
-  const postReserva = (companions) => {
-    axios.post('http://localhost:3001/reserva', { companions }).then((res) => {
+  const postReserva = () => {
+    axios.post('http://localhost:3001/reserva', { companions, rutLogin }).then((res) => {
       console.log(res);
     });
   };
@@ -152,12 +152,21 @@ export const App = () => {
   };
 
   const onChangeAge = ({ target }) => {
-    setAgeClient(target.value);
+    var today = new Date();
+    var birthDate = new Date(target.value);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) 
+    {
+        age--;
+    }
+    setAgeClient(age);
   };
 
   // useEffect(() => {
   //   console.log(nameClient, fatherLastName, motherLastName, rutClient, passwordClient, ageClient);
   // }, [nameClient, fatherLastName, motherLastName, rutClient, passwordClient, ageClient]);
+
 
   const onChangeRutLogin = ({ target }) => {
     setRutLogin(target.value);
@@ -177,7 +186,7 @@ export const App = () => {
   };
 
   const handleReserva = () => {
-    postReserva(companions);
+    postReserva();
     setCurrentPage('paymentDetails');
   };
 
@@ -575,18 +584,21 @@ export const App = () => {
         <div className="form-group mt-3">
           <label htmlFor="edad">Ingrese su edad:</label>
           <input
-            type="number"
+            type="date"
             className="form-control"
             id="edad"
             placeholder="0"
             onChange={onChangeAge}
           ></input>
         </div>
-        <div id="date-picker-example" className="md-form md-outline input-with-post-icon datepicker">
-          <input placeholder="Select date" type="text" id="example" className="form-control" />
-          <label for="example">Try me...</label>
-          <i className="fas fa-calendar input-prefix" tabIndex="0"><Icon.Calendar size={40}/></i>
-        </div>
+        { isRegister ? (
+          <div className="alert alert-danger" role="alert">
+            El usuario tiene que ser mayor de edad
+          </div>
+          ) : (
+          null
+        )  
+      }
         <div className="text-center mt-3">
           <button
             className="btn btn-light  my-1 py-3 w-75"
